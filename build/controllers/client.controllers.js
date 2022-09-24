@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClient = void 0;
+exports.deleteClient = exports.updateClient = exports.createClient = void 0;
 const Client_1 = require("../entities/Client");
 const Person_1 = require("../entities/Person");
 const createClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,3 +42,34 @@ const createClient = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.createClient = createClient;
+const updateClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const client = yield Client_1.Client.findOneBy({ clientId: req.params.id });
+        Client_1.Client.update({ clientId: req.params.id }, req.body);
+        Person_1.Person.update({ personId: req.params.id }, req.body);
+        if (!client)
+            return res.status(404).json({ message: 'No existe cliente' });
+        return res.sendStatus(204);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
+});
+exports.updateClient = updateClient;
+const deleteClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const client = yield Client_1.Client.delete({ clientId: req.params.id });
+        if (client.affected === 0) {
+            return res.status(404).json({ message: 'No existe cliente' });
+        }
+        return res.sendStatus(204);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
+});
+exports.deleteClient = deleteClient;

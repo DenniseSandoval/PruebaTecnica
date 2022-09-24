@@ -32,3 +32,33 @@ export const createClient = async (req: Request, res: Response) => {
     }
   }
 };
+export const updateClient= async(req: Request, res: Response)=>{
+  try{
+    const client= await Client.findOneBy({clientId:req.params.id})
+
+  Client.update({clientId:req.params.id}, req.body)
+  Person.update({personId:req.params.id}, req.body)
+  if(!client) return res.status(404).json({message:'No existe cliente'}) 
+  
+  return res.sendStatus(204);
+  }catch(error){
+    if(error instanceof Error){
+      return res.status(500).json({message: error.message});
+    }
+  }
+}
+export const deleteClient= async(req: Request, res: Response)=>{
+  try{
+    const client= await Client.delete({clientId:req.params.id})
+    
+    if(client.affected===0){
+      return res.status(404).json({message:'No existe cliente'}) 
+    } 
+  
+  return res.sendStatus(204);
+  }catch(error){
+    if(error instanceof Error){
+      return res.status(500).json({message: error.message});
+    }
+  }
+}

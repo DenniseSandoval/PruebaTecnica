@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAccountUser = void 0;
+exports.deleteAccount = exports.updateAccount = exports.createAccountUser = void 0;
 const Account_1 = require("../entities/Account");
 const Client_1 = require("../entities/Client");
 const createAccountUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,7 +32,7 @@ const createAccountUser = (req, res) => __awaiter(void 0, void 0, void 0, functi
             type: accountType,
             initialBalance: initialBalance,
             state: state,
-            client: name
+            client: name,
         };
         console.log(accountUser);
         return res.json(user);
@@ -44,3 +44,33 @@ const createAccountUser = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.createAccountUser = createAccountUser;
+const updateAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const account = yield Account_1.Account.findOneBy({ accountId: req.params.id });
+        Account_1.Account.update({ accountId: req.params.id }, req.body);
+        if (!account)
+            return res.status(404).json({ message: "No existe cuenta" });
+        return res.sendStatus(204);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
+});
+exports.updateAccount = updateAccount;
+const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const account = yield Account_1.Account.delete({ accountId: req.params.id });
+        if (account.affected === 0) {
+            return res.status(404).json({ message: "No existe cuenta" });
+        }
+        return res.sendStatus(204);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
+});
+exports.deleteAccount = deleteAccount;
