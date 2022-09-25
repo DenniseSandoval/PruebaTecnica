@@ -21,9 +21,14 @@ const createMovement = (req, res) => __awaiter(void 0, void 0, void 0, function*
             return res.status(404).json({ message: "Cuenta no encontrada" });
         }
         const movement = new Movement_1.Movement();
-        const lastMovement = yield Movement_1.Movement.createQueryBuilder('m').orderBy('m.movementId', 'DESC').getOne();
-        const balance = (lastMovement === null || lastMovement === void 0 ? void 0 : lastMovement.balance) + (value);
-        if (balance <= 0 && value < 0) {
+        const lastMovement = yield Movement_1.Movement.createQueryBuilder('m')
+            .where("m.account_id='" + account.accountId + "'")
+            .groupBy('m.movementId')
+            .orderBy('m.movementId', 'DESC').getOne();
+        console.log("lastmovement", lastMovement);
+        const lastBalance = lastMovement != null ? lastMovement === null || lastMovement === void 0 ? void 0 : lastMovement.balance : account.initialBalance;
+        const balance = lastBalance + (value);
+        if (balance < 0 && value < 0) {
             return res.status(404).json({ message: "Saldo no disponible" });
         }
         const time = Date.now();
@@ -41,7 +46,7 @@ const createMovement = (req, res) => __awaiter(void 0, void 0, void 0, function*
             initialBalance: account.initialBalance,
             state: account.state,
             movement: value,
-            lastBalance: lastMovement === null || lastMovement === void 0 ? void 0 : lastMovement.balance,
+            lastBalance: lastBalance,
             availableBalance: balance
         };
         console.log(movementAccount);
@@ -80,8 +85,6 @@ const getMovements = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getMovements = getMovements;
 const getAccountState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let totalDebit = 0;
-        let totalCredit = 0;
         const clients = yield Account_1.Account.createQueryBuilder('a')
             .select('m.date', 'Fecha')
             .addSelect('c.name', 'Cliente')

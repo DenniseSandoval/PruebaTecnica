@@ -6,17 +6,23 @@ import { Movement } from "../entities/Movement";
 export const createMovement = async (req: Request, res: Response) => {
   try {
     const { accountNumber, value} = req.body;
+    
     const account= await Account.getRepository().findOneBy({accountNumber: accountNumber});
     if(!account){
         return res.status(404).json({message: "Cuenta no encontrada"});
     }
 
     const movement = new Movement();
-
-    const lastMovement= await Movement.createQueryBuilder('m').orderBy('m.movementId', 'DESC').getOne()
-
-    const balance= lastMovement?.balance+(value);
-    if (balance<=0 && value<0) {
+    
+    const lastMovement= await Movement.createQueryBuilder('m')
+    .where("m.account_id='"+account.accountId+"'")
+    .groupBy('m.movementId')
+    .orderBy('m.movementId', 'DESC').getOne()
+    
+    console.log("lastmovement", lastMovement)
+    const lastBalance= lastMovement!=null ? lastMovement?.balance: account.initialBalance
+    const balance= lastBalance+(value);
+    if (balance<0 && value<0) {
         return res.status(404).json({message: "Saldo no disponible"});
     }
     const time= Date.now();
@@ -37,7 +43,7 @@ export const createMovement = async (req: Request, res: Response) => {
         initialBalance: account.initialBalance,
         state: account.state,
         movement: value,
-        lastBalance: lastMovement?.balance,
+        lastBalance: lastBalance,
         availableBalance: balance
     }
     console.log(movementAccount);
@@ -72,8 +78,6 @@ export const getMovements= async(req: Request, res: Response)=>{
 }
 export const getAccountState= async(req: Request, res: Response)=>{
   try{
-    let totalDebit= 0;
-    let totalCredit=0;
     const clients = await Account.createQueryBuilder('a')
   .select('m.date', 'Fecha')
   .addSelect('c.name', 'Cliente')

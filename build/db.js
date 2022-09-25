@@ -10,7 +10,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     type: 'postgres',
     host: 'localhost',
     username: 'postgres',
-    password: '',
+    password: 'password',
     port: 5432,
     database: 'useraccount',
     entities: [Person_1.Person, Client_1.Client, Account_1.Account, Movement_1.Movement],
