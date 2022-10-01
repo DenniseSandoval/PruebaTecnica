@@ -68,7 +68,8 @@ export const getMovements= async(req: Request, res: Response)=>{
   .innerJoin(Movement, 'm', 'a.accountId = m.account_id')
   .innerJoin(Client, 'c', 'c.clientId = a.client_id')
   .getRawMany()
-  console.log(clients)
+  console.log(clients);
+  res.statusCode= 200;
   return res.json(clients)
   }catch(error){
     if(error instanceof Error){

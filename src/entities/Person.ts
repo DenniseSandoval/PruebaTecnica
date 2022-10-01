@@ -8,21 +8,19 @@ export class Person extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({
-    nullable: true,
-  })
+  @Column({nullable:true})
   gender: string;
 
-  @Column({ nullable: true })
+  @Column({nullable:true})
   age: number;
 
-  @Column({ nullable: true })
+  @Column({nullable:true})
   id: string;
 
-  @Column({ nullable: true })
+  @Column({nullable:true})
   address: string;
 
-  @Column({ nullable: true })
+  @Column({nullable:true})
   phone: string;
 
   @OneToOne(type => Client, client => client.person,{

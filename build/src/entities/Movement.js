@@ -9,46 +9,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Person = void 0;
+exports.Movement = void 0;
 const typeorm_1 = require("typeorm");
-const Client_1 = require("./Client");
-let Person = class Person extends typeorm_1.BaseEntity {
+const Account_1 = require("./Account");
+let Movement = class Movement extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", String)
-], Person.prototype, "personId", void 0);
+], Movement.prototype, "movementId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'date' }),
+    __metadata("design:type", Date)
+], Movement.prototype, "date", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Person.prototype, "name", void 0);
+], Movement.prototype, "movementType", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Person.prototype, "gender", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Person.prototype, "age", void 0);
+], Movement.prototype, "value", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Person.prototype, "id", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Movement.prototype, "balance", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Person.prototype, "address", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Person.prototype, "phone", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(type => Client_1.Client, client => client.person, {
-        cascade: true,
-    }),
-    __metadata("design:type", Client_1.Client)
-], Person.prototype, "client", void 0);
-Person = __decorate([
+    (0, typeorm_1.ManyToOne)(() => Account_1.Account, account => account.movements),
+    (0, typeorm_1.JoinColumn)({ name: 'account_id' }),
+    __metadata("design:type", Account_1.Account)
+], Movement.prototype, "account", void 0);
+Movement = __decorate([
     (0, typeorm_1.Entity)()
-], Person);
-exports.Person = Person;
+], Movement);
+exports.Movement = Movement;

@@ -10,6 +10,7 @@ export const createClient = async (req: Request, res: Response) => {
     client.state = state;
 
     const person= new Person();
+    
     person.name= name;
     person.gender= gender;
     person.age= age;

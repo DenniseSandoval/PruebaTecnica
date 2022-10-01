@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const movements_controllers_1 = require("../controllers/movements.controllers");
+const router = (0, express_1.Router)();
+router.post('/movimientos', movements_controllers_1.createMovement);
+router.get('/movimientos', movements_controllers_1.getMovements);
+router.get('/estadocuenta/:dateInitial/:dateEnd/:client', movements_controllers_1.getAccountState);
+router.put("/movimientos/:id", movements_controllers_1.updateMovement);
+router.delete("/movimientos/:id", movements_controllers_1.deleteMovement);
+exports.default = router;

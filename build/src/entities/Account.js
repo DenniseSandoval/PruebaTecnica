@@ -9,46 +9,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Person = void 0;
+exports.Account = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
-let Person = class Person extends typeorm_1.BaseEntity {
+const Movement_1 = require("./Movement");
+let Account = class Account extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", String)
-], Person.prototype, "personId", void 0);
+], Account.prototype, "accountId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Person.prototype, "name", void 0);
+], Account.prototype, "accountNumber", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Person.prototype, "gender", void 0);
+], Account.prototype, "accountType", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Person.prototype, "age", void 0);
+], Account.prototype, "initialBalance", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Person.prototype, "id", void 0);
+], Account.prototype, "state", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Person.prototype, "address", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Person.prototype, "phone", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(type => Client_1.Client, client => client.person, {
-        cascade: true,
-    }),
+    (0, typeorm_1.ManyToOne)(() => Client_1.Client, client => client.accounts),
+    (0, typeorm_1.JoinColumn)({ name: 'client_id' }),
     __metadata("design:type", Client_1.Client)
-], Person.prototype, "client", void 0);
-Person = __decorate([
+], Account.prototype, "client", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Movement_1.Movement, movement => movement.account),
+    __metadata("design:type", Array)
+], Account.prototype, "movements", void 0);
+Account = __decorate([
     (0, typeorm_1.Entity)()
-], Person);
-exports.Person = Person;
+], Account);
+exports.Account = Account;

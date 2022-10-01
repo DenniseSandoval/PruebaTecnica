@@ -7,10 +7,10 @@ export class Client extends Person{
   @PrimaryGeneratedColumn()
   clientId: string
 
-  @Column({ nullable: true })
+  @Column({})
   password: string
 
-  @Column({ nullable: true })
+  @Column({})
   state: boolean
 
   @OneToOne(type => Person, person => person.client)
